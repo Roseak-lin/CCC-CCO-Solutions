@@ -1,116 +1,203 @@
 package CCC_20;
-import java.io.*;
-import java.util.*;
 
-public class J5 {
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.LinkedList;
+
+public class Actual_J5 {
 
 	public static void main(String[] args) throws Exception {
-		Scanner in = new Scanner(System.in);
-		int y = in.nextInt();
-		int x = in.nextInt();
+		LinkedList<Integer> queue = new LinkedList<Integer>();
+		ArrayDeque<Integer> moves = new ArrayDeque<Integer>();
+		boolean visited[][];
+		HashMap<Integer, ArrayDeque<Integer>> map = new HashMap<Integer, ArrayDeque<Integer>>();
+		Reader in = new Reader();
+		final int y = in.nextInt();
+		final int x = in.nextInt();
 		int arr[][] = new int[x + 1][y + 1];
-
-		for (int i = 1; i <= x; i++) {
-			for (int j = 1; j <= y; j++) {
-				arr[i][j] = in.nextInt();
-			}
-		}
-		boolean contains = false;
-		boolean poss = false;
-
-		outer: for (int i = 1; i <= x; i++) {
-			for (int j = 1; j <= y; j++) {
-				if (arr[i][j] == x * y && (i != x || j != y)) {
-					contains = true;
-					break outer;
+		visited = new boolean[x + 1][y + 1];
+		for (int i = 1; i <= y; i++) {
+			for (int j = 1; j <= x; j++) {
+				arr[j][i] = in.nextInt();
+				if (arr[j][i] > x * y && i != y && j != x) {
+					visited[j][i] = true;
 				}
 			}
 		}
-		int curr = arr[1][1];
-		int count = 0;
-		boolean visited[][] = new boolean[x + 1][y + 1];
-//		if (contains && arr[1][1] != 1 && y != 1) {
-//			outer: for (int i = 1; i <= x; i++) {
-//				for (int j = 1; j <= y; j++) {
-//					System.out.println(curr + " " + i + " " + j);
-//					if (arr[1][1] > x && arr[1][1] > y && arr[1][1] != x * y) {
-//						break outer;
-//					}
-//					if (i * j == curr && !visited[i][j]) {
-//						curr = arr[i][j];
-//						visited[i][j] = true;
-//						continue;
-//					}
-//					if (i * j == curr && !visited[j][i]) {
-//						curr = arr[j][i];
-//						visited[j][i] = true;
-//						continue;
-//					}
-//					if (curr == x * y) {
-//						poss = true;
-//						break outer;
-//					}
-//				}
-//			}
-//		}
-		if (contains && arr[1][1] != 1 && y != 1) {
-			loop: while (curr != x * y) {
-				if (arr[1][1] > x && arr[1][1] > y && arr[1][1] != x * y) {
-					break;
+		in.close();
+		queue.addLast(1);
+		queue.addLast(1);
+		visited[1][1] = true;
+		while (visited[x][y] == false && !queue.isEmpty()) {
+			int s = queue.removeFirst();
+			int s1 = queue.removeFirst();
+			if (arr[s][s1] == x * y) {
+				visited[x][y] = true;
+				break;
+			}
+			factors(arr[s][s1], x, y, map, moves);
+			while (!moves.isEmpty()) {
+				int n1 = moves.removeFirst();
+				int n2 = moves.removeFirst();
+				if (visited[n1][n2]) {
+					continue;
 				}
-				for (int i = 1; i <= x; i++) {
-					for (int j = 1; j <= y; j++) {
-						System.out.println(curr + " " + i + " " + j);
-						if (i * j == curr && (isPrime(arr[i][j]) && arr[i][j] <= x && arr[i][j] <= y)) {
-							if (!visited[i][j]) {
-								curr = arr[i][j];
-								visited[i][j] = true;
-								continue;
-							} else if (!visited[j][i] && (isPrime(arr[i][j]) && arr[i][j] <= x && arr[i][j] <= y)) {
-								curr = arr[j][i];
-								visited[j][i] = true;
-								continue;
-							}
-							continue;
-						}
+				move(n1, n2, visited, queue);
+			}
+		}
+
+		if (queue.isEmpty() && !visited[x][y]) {
+			System.out.println("no");
+		} else {
+			System.out.println("yes");
+		}
+	}
+
+	static void move(int x, int y, boolean visited[][], LinkedList<Integer> queue) {
+		visited[x][y] = true;
+		queue.addLast(x);
+		queue.addLast(y);
+	}
+
+	static void factors(int n, int x, int y, HashMap<Integer, ArrayDeque<Integer>> map, ArrayDeque<Integer> moves) {
+		if (map.containsKey(n)) {
+			for (int i : map.get(n)) {
+				moves.add(i);
+			}
+		} else {
+			for (int i = 1; i <= Math.sqrt(n); i++) {
+				if (n % i == 0) {
+					int n1 = i;
+					int n2 = n / i;
+					if (n1 <= x && n2 <= x && n1 <= y && n2 <= y) {
+						moves.add(n1);
+						moves.add(n2);
+						moves.add(n2);
+						moves.add(n1);
+					} else if (n1 <= x && n1 >= y && n2 <= y) {
+						moves.add(n1);
+						moves.add(n2);
+					} else if (n1 >= x && n1 <= y && n2 <= x) {
+						moves.add(n2);
+						moves.add(n1);
+					} else if (n2 <= x && n2 >= y && n1 <= y) {
+						moves.add(n2);
+						moves.add(n1);
+					} else if (n2 <= y && n2 >= x && n1 <= x) {
+						moves.add(n1);
+						moves.add(n2);
 					}
 				}
 			}
-		}
-		System.out.println(curr);
-		case1: while (true && contains && y == 1) {
-			if (curr == 1 || curr > x) {
-				break case1;
-			}
-			if (curr == x) {
-				poss = true;
-				break;
-			}
-			curr = arr[curr][1];
-		}
-		if (poss) {
-			System.out.println("yes");
-		} else {
-			System.out.println("no");
+			map.put(n, moves);
 		}
 	}
 
-	static boolean isPrime(int a) {
-		if (a <= 2) {
-			return true;
-		}
-		for (int i = 2; i < a / 2; i++) {
-			if (a % i == 0) {
-				return false;
-			}
-		}
-		return true;
-	}
+	static class Reader {
+		final private int BUFFER_SIZE = 1 << 16;
+		private DataInputStream din;
+		private byte[] buffer;
+		private int bufferPointer, bytesRead;
 
-//	static boolean BFS(int start, int end) {
-//		LinkedList<Integer> queue = new LinkedList();
-//		LinkedList<Integer> toVisit = new LinkedList();
-//		boolean visited[] = new boolean[end];
-//		
-//	}
+		public Reader() {
+			din = new DataInputStream(System.in);
+			buffer = new byte[BUFFER_SIZE];
+			bufferPointer = bytesRead = 0;
+		}
+
+		public Reader(String file_name) throws IOException {
+			din = new DataInputStream(new FileInputStream(file_name));
+			buffer = new byte[BUFFER_SIZE];
+			bufferPointer = bytesRead = 0;
+		}
+
+		public String readLine() throws IOException {
+			byte[] buf = new byte[64]; // line length
+			int cnt = 0, c;
+			while ((c = read()) != -1) {
+				if (c == '\n')
+					break;
+				buf[cnt++] = (byte) c;
+			}
+			return new String(buf, 0, cnt);
+		}
+
+		public int nextInt() throws IOException {
+			int ret = 0;
+			byte c = read();
+			while (c <= ' ')
+				c = read();
+			boolean neg = (c == '-');
+			if (neg)
+				c = read();
+			do {
+				ret = ret * 10 + c - '0';
+			} while ((c = read()) >= '0' && c <= '9');
+
+			if (neg)
+				return -ret;
+			return ret;
+		}
+
+		public long nextLong() throws IOException {
+			long ret = 0;
+			byte c = read();
+			while (c <= ' ')
+				c = read();
+			boolean neg = (c == '-');
+			if (neg)
+				c = read();
+			do {
+				ret = ret * 10 + c - '0';
+			} while ((c = read()) >= '0' && c <= '9');
+			if (neg)
+				return -ret;
+			return ret;
+		}
+
+		public double nextDouble() throws IOException {
+			double ret = 0, div = 1;
+			byte c = read();
+			while (c <= ' ')
+				c = read();
+			boolean neg = (c == '-');
+			if (neg)
+				c = read();
+
+			do {
+				ret = ret * 10 + c - '0';
+			} while ((c = read()) >= '0' && c <= '9');
+
+			if (c == '.') {
+				while ((c = read()) >= '0' && c <= '9') {
+					ret += (c - '0') / (div *= 10);
+				}
+			}
+
+			if (neg)
+				return -ret;
+			return ret;
+		}
+
+		private void fillBuffer() throws IOException {
+			bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+			if (bytesRead == -1)
+				buffer[0] = -1;
+		}
+
+		private byte read() throws IOException {
+			if (bufferPointer == bytesRead)
+				fillBuffer();
+			return buffer[bufferPointer++];
+		}
+
+		public void close() throws IOException {
+			if (din == null)
+				return;
+			din.close();
+		}
+	}
 }
