@@ -1,34 +1,31 @@
-package CCC_19;
-
 import java.util.Scanner;
 
 public class J4 {
 
 	public static void main(String[] args) {
-
-		Scanner sc = new Scanner(System.in);
-		String s = sc.nextLine();
-		int a[][] = { { 1, 2 }, { 3, 4 } };
-		for (int i = 0; i < s.length(); i++) {
-			if (s.charAt(i) == 'H') {
-				int temp = a[0][0];
-				a[0][0] = a[1][0];
-				a[1][0] = temp;
-				int temp2 = a[0][1];
-				a[0][1] = a[1][1];
-				a[1][1] = temp2;
-			} else {
-				int temp = a[0][0];
-				a[0][0] = a[0][1];
-				a[0][1] = temp;
-				int temp2 = a[1][0];
-				a[1][0] = a[1][1];
-				a[1][1] = temp2;
+		Scanner input = new Scanner(System.in);
+		String u = input.nextLine();
+		String[] a = u.split("");
+		int[] arr = { 1, 2, 3, 4 };
+		for (int i = 0; i < a.length; i++) {
+			int temp;
+			if (a[i].equalsIgnoreCase("h")) {
+				temp = arr[0];
+				arr[0] = arr[2];
+				arr[2] = temp;
+				temp = arr[1];
+				arr[1] = arr[3];
+				arr[3] = temp;
+			} else if (a[i].equalsIgnoreCase("v")) {
+				temp = arr[0];
+				arr[0] = arr[1];
+				arr[1] = temp;
+				temp = arr[2];
+				arr[2] = arr[3];
+				arr[3] = temp;
 			}
 		}
-		for (int i = 0; i < 2; i++)
-			System.out.println(a[i][0] + " " + a[i][1]);
-		sc.close();
+		System.out.println(arr[0] + " " + arr[1] + "\n" + arr[2] + " " + arr[3]);
 	}
 
 }
