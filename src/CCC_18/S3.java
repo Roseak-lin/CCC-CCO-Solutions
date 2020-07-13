@@ -24,7 +24,7 @@ public class S3 {
 		grid = new char[y][x];
 		dist = new int[y][x];
 		for (int i = 0; i < y; i++) {
-			Arrays.fill(dist[i], 10001);
+			Arrays.fill(dist[i], 100001);
 		}
 		for (int i = 0; i < y; i++) {
 			char temp[] = in.readLine().toCharArray();
@@ -44,7 +44,6 @@ public class S3 {
 				}
 			}
 		}
-		in.close();
 		while (!cam.isEmpty() && !flag) {
 			int x = cam.poll();
 			int y = cam.poll();
@@ -60,11 +59,11 @@ public class S3 {
 				System.out.println(-1);
 				continue;
 			}
-			System.out.println(dist[x][y] == 10001 ? -1 : dist[x][y]);
+			System.out.println(dist[x][y] == 100001 ? -1 : dist[x][y]);
 		}
 //		for (int i = 0; i < y; i++) {
 //			for (int j = 0; j < x; j++) {
-//				System.out.print(dist[i][j] + " ");
+//				System.out.print(grid[i][j]);
 //			}
 //			System.out.println();
 //		}
@@ -81,11 +80,7 @@ public class S3 {
 		dist[sY][sX] = 0;
 		while (!q.isEmpty()) {
 			int arr[] = q.poll();
-			if (arr[0] < x && arr[0] >= 0 && arr[1] >= 0 && arr[1] < y && grid[arr[1]][arr[0]] != 'W') {
-				dist[arr[1]][arr[0]] = Math.min(dist[arr[1]][arr[0]], arr[2]);
-			}
-			if (arr[0] < 0 || arr[0] >= x || arr[1] < 0 || arr[1] >= y || visited[arr[1]][arr[0]]
-					|| grid[arr[1]][arr[0]] == 'W') {
+			if (visited[arr[1]][arr[0]] || grid[arr[1]][arr[0]] == 'W' ||grid[arr[1]][arr[0]] == '*') {
 				continue;
 			} else {
 				visited[arr[1]][arr[0]] = true;
@@ -109,48 +104,48 @@ public class S3 {
 	}
 
 	static void camarabfs(int cx, int cy) {
-		for (int i = cx + 1; i < x; i++) {
-			if (grid[cy][i] == 'W' || grid[cy][i] == 'C') {
+		for (int i = cx; i < x; i++) {
+			if (grid[cy][i] == 'W') {
 				break;
 			}
 			if (grid[cy][i] == '.') {
-				grid[cy][i] = 'W';
+				grid[cy][i] = '*';
 			}
 			if (grid[cy][i] == 'S') {
 				flag = true;
 				return;
 			}
 		}
-		for (int i = cx - 1; i > -1; i--) {
-			if (grid[cy][i] == 'W' || grid[cy][i] == 'C') {
+		for (int i = cx; i > -1; i--) {
+			if (grid[cy][i] == 'W') {
 				break;
 			}
 			if (grid[cy][i] == '.') {
-				grid[cy][i] = 'W';
+				grid[cy][i] = '*';
 			}
 			if (grid[cy][i] == 'S') {
 				flag = true;
 				return;
 			}
 		}
-		for (int i = cy + 1; i < y; i++) {
-			if (grid[i][cx] == 'W' || grid[i][cx] == 'C') {
+		for (int i = cy; i < y; i++) {
+			if (grid[i][cx] == 'W') {
 				break;
 			}
 			if (grid[i][cx] == '.') {
-				grid[i][cx] = 'W';
+				grid[i][cx] = '*';
 			}
 			if (grid[i][cx] == 'S') {
 				flag = true;
 				return;
 			}
 		}
-		for (int i = cy - 1; i > -1; i--) {
-			if (grid[i][cx] == 'W' || grid[i][cx] == 'C') {
+		for (int i = cy; i > -1; i--) {
+			if (grid[i][cx] == 'W') {
 				break;
 			}
 			if (grid[i][cx] == '.') {
-				grid[i][cx] = 'W';
+				grid[i][cx] = '*';
 			}
 			if (grid[i][cx] == 'S') {
 				flag = true;
