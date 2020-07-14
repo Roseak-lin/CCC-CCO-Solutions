@@ -1,36 +1,30 @@
-package CCC_19;
+import java.util.Scanner;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Stack;
+public class J4 {
 
-public class S1 {
-	static PrintWriter pw = new PrintWriter(System.out);
-	public static void main(String[] args) throws IOException {
-		solve();
-	}
-
-	public static void solve() throws IOException {
-		DataInputStream in = new DataInputStream(System.in);
-		int n = Integer.parseInt(in.readLine());
-		Stack<Integer> s = new Stack<Integer>();
-		for (int i = 0; i < n; i++) {
-			int a = Integer.parseInt(in.readLine());
-			if (a == 0 && s.size() != 0) {
-				s.pop();
-			} else if (a != 0) {
-				s.push(a);
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		String s = sc.nextLine();
+		int a[][] = { { 1, 2 }, { 3, 4 } };
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == 'H') {
+				int temp = a[0][0];
+				a[0][0] = a[1][0];
+				a[1][0] = temp;
+				int temp2 = a[0][1];
+				a[0][1] = a[1][1];
+				a[1][1] = temp2;
+			} else {
+				int temp = a[0][0];
+				a[0][0] = a[0][1];
+				a[0][1] = temp;
+				int temp2 = a[1][0];
+				a[1][0] = a[1][1];
+				a[1][1] = temp2;
 			}
 		}
-		int sum = 0;
-		while (!s.isEmpty()) {
-			sum += s.peek();
-			s.pop();
-		}
-		pw.println(sum);
-		pw.flush();
-		return;
+		for (int i = 0; i < 2; i++)
+			System.out.println(a[i][0] + " " + a[i][1]);
 	}
 
 }

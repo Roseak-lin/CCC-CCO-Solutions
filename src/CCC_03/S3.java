@@ -1,5 +1,3 @@
-package CCC_03;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -90,7 +88,7 @@ public class S3 {
 		String next() {
 			while (st == null || !st.hasMoreElements()) {
 				try {
-					st = new StringTokenizer(br.readLine().trim());
+					st = new StringTokenizer(br.readLine());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -113,7 +111,7 @@ public class S3 {
 		String nextLine() {
 			String str = "";
 			try {
-				str = br.readLine().trim();
+				str = br.readLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

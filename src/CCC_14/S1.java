@@ -3,7 +3,7 @@ package CCC_14;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CCC2014s1 {
+public class S1 {
 
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);

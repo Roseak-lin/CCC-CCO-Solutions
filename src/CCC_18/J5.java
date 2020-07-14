@@ -11,7 +11,7 @@ public class J5 {
 		int arr[][] = new int[p + 1][];
 		ArrayList<Integer> poss = new ArrayList<Integer>();
 		if (p == 1) {
-			System.out.println("Y\n1");
+			System.out.println("Y\n");
 			System.exit(0);
 		}
 		arr[0] = new int[0];

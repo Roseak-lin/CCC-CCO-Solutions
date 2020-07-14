@@ -1,31 +1,28 @@
-package CCC_03;
+import java.io.*;
+import java.util.*;
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-public class S4 {
-
-	@SuppressWarnings("deprecation")
-	public static void main(String[] args) throws IOException {
-		DataInputStream in = new DataInputStream(System.in);
-		int cases = Integer.parseInt(in.readLine());
-		for (int i = 0; i < cases; i++) {
-			String s = in.readLine();
-			int count = 2;
-			for (int j = 1; j < s.length(); j++) {
-				for (int x = 0; x <= s.length() - j; x++) {
-//					System.out.println(s.substring(x, x + j));
-					if (s.indexOf(s.substring(x, x + j)) == x) {
-						count++;
-					}
-				}
-			}
-			System.out.println((count));
+public class Main {
+    public static void main(String[] args) throws IOException{
+        Reader in = new Reader();
+		int a = Integer.parseInt(in.readLine());
+		int b = Integer.parseInt(in.readLine());
+		String word1[] = new String[a];
+		String word2[] = new String[b];
+		
+		for (int i = 0; i < a; i++) {
+		    word1[i] = in.readLine();
 		}
-	}
-
-	static class Reader {
+		for (int i = 0; i < b; i++) {
+		    word2[i] = in.readLine();
+		}
+		
+	    for (int i = 0; i < a; i++) {
+	        for (int j = 0; j < b; j++) {
+	            System.out.println(word1[i] + " as " + word2[j]);
+	        }
+	    }
+    }
+    static class Reader {
 		final private int BUFFER_SIZE = 1 << 16;
 		private DataInputStream din;
 		private byte[] buffer;
@@ -44,7 +41,7 @@ public class S4 {
 		}
 
 		public String readLine() throws IOException {
-			byte[] buf = new byte[10000];
+			byte[] buf = new byte[64]; // line length
 			int cnt = 0, c;
 			while ((c = read()) != -1) {
 				if (c == '\n')
