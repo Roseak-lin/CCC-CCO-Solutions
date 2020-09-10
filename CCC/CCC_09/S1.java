@@ -1,78 +1,29 @@
-package resources;
-
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.ArrayList;
 
-public class Dijkstra_PQ {
-	static boolean visited[];
-	static int graph[][];
-	static int nodes;
-	static int dist[], from[];
-	public static void main(String[] args) throws IOException {
+public class S1 {
+	static ArrayList<Integer> cube = new ArrayList<Integer>();
+
+	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
-		nodes = in.nextInt();
-		final int edges = in.nextInt();
-		visited = new boolean[nodes + 1];
-		dist = new int[nodes + 1];
-		from = new int[nodes + 1];
-		graph = new int[nodes + 1][nodes + 1];
-
-		for (int i = 0; i < nodes + 1; i++) {
-			Arrays.fill(graph[i], Integer.MAX_VALUE);
-		}
-		for (int i = 0; i < edges; i++) {
-			int a = in.nextInt(), b = in.nextInt(), c = in.nextInt();
-			graph[a][b] = Math.min(c, graph[a][b]);
-			graph[b][a] = Math.min(c, graph[b][a]);
-		}
-		Arrays.fill(dist, 0x3f3f3f3f);
-		PriorityQueue<int[]> q = new PriorityQueue<int[]>(new Comparator<int[]>() {
-			public int compare(int[] o1, int[] o2) {
-				if (o1[1] > o2[1]) {
-					return 1;
-				} else if (o1[1] < o2[1]) {
-					return -1;
-				}
-				return 0;
+		int a = in.nextInt(), b = in.nextInt();
+		int cool = 0;
+		for (int i = 1; i <= b; i++) {
+			if (i * i > b) {
+				break;
 			}
-		});
-
-		// starting from node 1
-		// queue's elements: current node, weight, from
-		for (int i = 0; i < nodes + 1; i++) {
-			if (graph[1][i] != Integer.MAX_VALUE) {
-				q.add(new int[] { i, graph[1][i], 1 });
+			cube.add(i * i * i);
+			if (cube.contains(i * i) && i * i >= a) {
+				cool++;
 			}
 		}
-		visited[1] = true;
-		dist[1] = 0;
-		while (!q.isEmpty()) {
-			int arr[] = q.poll();
-			if (visited[arr[0]]) {
-				continue;
-			}
-			visited[arr[0]] = true;
-			if (dist[arr[0]] > arr[1] + dist[arr[2]]) {
-				dist[arr[0]] = arr[1];
-				from[arr[0]] = arr[2];
-			}
-
-			for (int i = 0; i < graph[arr[0]].length; i++) {
-				if (graph[arr[0]][i] != Integer.MAX_VALUE) {
-					q.add(new int[] { i, graph[arr[0]][i] + arr[1], arr[0] });
-				}
-			}
-		}
-		for (int i = 1; i <= nodes; i++) {
-			System.out.println(dist[i] == 0x3f3f3f3f ? "-1" : dist[i]);
-		}
+		System.out.println(cool);
 	}
+
 	static class Reader {
-		final private int BUFFER_SIZE = 1 << 16;
+		final private int BUFFER_SIZE = 100000;
 		private DataInputStream din;
 		private byte[] buffer;
 		private int bufferPointer, bytesRead;
@@ -90,7 +41,7 @@ public class Dijkstra_PQ {
 		}
 
 		public String readLine() throws IOException {
-			byte[] buf = new byte[100000];
+			byte[] buf = new byte[BUFFER_SIZE];
 			int cnt = 0, c;
 			while ((c = read()) != -1) {
 				if (c == '\n')

@@ -1,75 +1,49 @@
-package resources;
-
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class Dijkstra {
-	static boolean visited[];
-	static int graph[][];
-	static int nodes;
-	static PriorityQueue<int[]> q = new PriorityQueue<int[]>(new Compare());
+public class S4 {
+	static ArrayList<edge> arr[] = new ArrayList[2002];
+	static PriorityQueue<int[]> q = new PriorityQueue<int[]>(new Comparator<int[]>() {
+		public int compare(int[] o1, int[] o2) {
+			return o1[2] - o2[2];
+		}
+	});
+	static int dist[] = new int[2002];
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		Reader in = new Reader();
-		nodes = in.nextInt();
-		final int edges = in.nextInt();
-		visited = new boolean[nodes + 1];
-		graph = new int[nodes + 1][nodes + 1];
-
-		for (int i = 0; i < nodes + 1; i++) {
-			Arrays.fill(graph[i], Integer.MAX_VALUE);
-		}
-		for (int i = 0; i < edges; i++) {
-			int a = in.nextInt(), b = in.nextInt(), c = in.nextInt();
-			graph[a][b] = Math.min(c, graph[a][b]);
-			graph[b][a] = Math.min(c, graph[b][a]);
+		int k = in.nextInt(), n = in.nextInt(), m = in.nextInt();
+		for (int i = 1; i <= 2001; i++) {
+			arr[i] = new ArrayList<edge>();
+			dist[i] = Integer.MAX_VALUE;
 		}
 
-		dijkstra(1);
-	}
-
-	static int minDistance(int dist[], int nodes) {
-		int min = Integer.MAX_VALUE, min_index = -1;
-		for (int v = 1; v <= nodes; v++)
-			if (!visited[v] && dist[v] <= min) {
-				min = dist[v];
-				min_index = v;
-			}
-		return min_index;
-	}
-
-	static void print(int dist[]) {
-		for (int i = 1; i < dist.length; i++) {
-			if (dist[i] == Integer.MAX_VALUE) {
-				System.out.println(-1);
-				continue;
-			}
-			System.out.println(dist[i]);
+		while (m-- != 0) {
+			int a = in.nextInt(), b = in.nextInt(), t = in.nextInt(), h = in.nextInt();
+			arr[a].add(new edge(b, t, h));
+			arr[b].add(new edge(a, t, h));
 		}
-	}
-
-	static void dijkstra(int src) {
-		int dist[] = new int[nodes + 1];
-		Arrays.fill(dist, Integer.MAX_VALUE);
-		dist[src] = 0;
-
-		for (int count = 1; count <= nodes; count++) {
-			int u = minDistance(dist, count);
-			visited[u] = true;
-			for (int v = 1; v <= nodes; v++) {
-				if (!visited[v] && graph[u][v] != Integer.MAX_VALUE && dist[u] != Integer.MAX_VALUE) {
-					dist[v] = Math.min(dist[u] + graph[u][v], dist[v]);
+		int f = in.nextInt(), t = in.nextInt();
+		q.add(new int[] { f, 0, 0 });
+		while (!q.isEmpty()) {
+			int[] curr = q.poll();
+			dist[curr[0]] = Math.min(dist[curr[0]], curr[1]);
+			for (edge e : arr[curr[0]]) {
+				if (curr[2] >= k || e.h + curr[2] >= k || e.d + curr[1] > dist[e.t]) {
+					continue;
 				}
+				q.add(new int[] {e.t, e.d + curr[1], e.h + curr[2]});
 			}
 		}
-		print(dist);
+		System.out.println(dist[t] == Integer.MAX_VALUE ? -1 : dist[t]);
 	}
+
 	static class Reader {
-		final private int BUFFER_SIZE = 1 << 16;
+		final private int BUFFER_SIZE = 100000;
 		private DataInputStream din;
 		private byte[] buffer;
 		private int bufferPointer, bytesRead;
@@ -87,7 +61,7 @@ public class Dijkstra {
 		}
 
 		public String readLine() throws IOException {
-			byte[] buf = new byte[10000]; // line length
+			byte[] buf = new byte[BUFFER_SIZE];
 			int cnt = 0, c;
 			while ((c = read()) != -1) {
 				if (c == '\n')
@@ -172,21 +146,14 @@ public class Dijkstra {
 			din.close();
 		}
 	}
+
 }
+ class edge {
+		int t, d, h;
 
-////////////////////////////////////////////////////////////////////////////////////////
-
-class Compare implements Comparator<int[]> {
-
-	public int compare(int[] o, int[] o1) {
-		if (o[1] > o1[1]) {
-			return 1;
-		} else if (o[1] < o1[1]) {
-			return -1;
-		} else {
-			return 0;
+		edge(int t, int d, int h) {
+			this.t = t;
+			this.d = d;
+			this.h = h;
 		}
 	}
-
-	
-}
