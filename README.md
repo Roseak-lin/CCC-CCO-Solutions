@@ -1,2 +1,2 @@
 # CCC-practice
-Repo of waterloo CCC and CCO contest problems
+Repository of solutions to University of Waterloo CCC and CCO problems
